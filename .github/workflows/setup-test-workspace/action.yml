@@ -13,6 +13,7 @@ runs:
           ref: ${{ inputs.ref-slice-ref }}
           persist-credentials: true
           path: ref_slice
+          fetch-depth: 0
       - name: Create dummy crate
         # This crates do not have matching baselines on crates.io, so any try
         # of checking them should make cargo-semver-checks fail.

@@ -456,6 +456,9 @@ jobs:
           exit 1
 
   test-baseline-revision:
+    # Should pass because revision points to latest
+    # changes on major_change branch. If options are
+    # somehow ignored, this test should fail
     name: Test baseline lookup with git revision
     runs-on: ubuntu-latest
     steps:
@@ -463,22 +466,20 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: action
+          fetch-depth: 0
       - name: Setup the workspace with ref_slice major change
         uses: ./action/.github/workflows/setup-test-workspace
         with:
           ref-slice-ref: major_change
-      - name: Run the action on ref_slice major change (expected to fail)
+      - name: debug
+        run: ls -la
+        shell: bash
+      - name: Run the action on ref_slice major change
         id: action_major
         uses: ./action/
         with:
           package: ref_slice
-          baseline-rev: 4dee011b55f36ac44bbdbb72323cd8f09cfd22df
-        continue-on-error: true
-      - name: Fail if the action has not returned any errors (but it should have)
-        if: steps.action_major.outcome != 'failure'
-        run: |
-          echo "Error! The action should have failed because of the breaking change, but it has not."
-          exit 1
+          baseline-rev: 4d64380252c8fbda023cca58406fa40a27ad1177
 
   test-baseline-root:
     name: Test baseline lookup with directory of crate source
