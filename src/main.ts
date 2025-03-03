@@ -114,6 +114,12 @@ async function runCargoSemverChecks(cargo: rustCore.Cargo): Promise<void> {
     // need to set the target directory explicitly.
     process.env["CARGO_TARGET_DIR"] = CARGO_TARGET_DIR;
 
+    core.info(`Debuging::HELPME`);
+
+    core.info(`Debuging::HELPME  ${getCheckReleaseArguments()}`);
+
+    core.info(JSON.stringify(getCheckReleaseArguments()));
+
     await cargo.call(["semver-checks", "check-release"].concat(getCheckReleaseArguments()));
 }
 
@@ -170,6 +176,7 @@ async function run(): Promise<void> {
 
     await cache.restore();
     await runCargoSemverChecks(cargo);
+    core.info("........................... about to save to cache");
     await cache.save();
 }
 

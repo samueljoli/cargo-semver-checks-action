@@ -1,5 +1,6 @@
 import os = require("os");
 
+import * as io from "@actions/io";
 import * as path from "path";
 import * as crypto from "crypto";
 import * as cache from "@actions/cache";
@@ -27,6 +28,7 @@ export class RustdocCache {
     }
 
     async save(): Promise<void> {
+        core.info("...... in save method");
         const cacheKeyWithLocalHash = `${await this.cacheKey()}-${await this.getLocalCacheHash()}`;
         if (this.restoredCacheKey == cacheKeyWithLocalHash) {
             core.info("Rustdoc cache is up to date, skipping saving.");
@@ -38,6 +40,8 @@ export class RustdocCache {
     }
 
     async restore(): Promise<boolean> {
+        await io.mkdirP(this.cachePath);
+
         core.info("Restoring rustdoc cache...");
         core.info(`Rustdoc cache path: ${this.cachePath}.`);
         core.info(`Rustdoc cache key: ${await this.cacheKey()}.`);
@@ -56,6 +60,7 @@ export class RustdocCache {
     }
 
     private async cacheKey(): Promise<string> {
+        core.info(".... in cacheKey method");
         if (!this.__cacheKey) {
             this.__cacheKey = [
                 rustCore.input.getInput("prefix-key") || "semver",
@@ -81,6 +86,7 @@ export class RustdocCache {
     }
 
     private async getLocalCacheHash(): Promise<string> {
+        core.info(".......... in getLocalCacheHash method");
         return await hashFolderContent(this.cachePath);
     }
 

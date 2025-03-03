@@ -462,23 +462,23 @@ jobs:
     name: Test baseline lookup with git revision
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout the test repository
+        uses: actions/checkout@v4
+        with:
+          repository: mgr0dzicki/cargo-semver-action-ref-slice
+          ref: major_change
+          # ref: patch_change
+          # fetch-depth: 0
       - name: Checkout the action
         uses: actions/checkout@v4
         with:
           path: action
-          fetch-depth: 0
-      - name: Setup the workspace with ref_slice major change
-        uses: ./action/.github/workflows/setup-test-workspace
-        with:
-          ref-slice-ref: major_change
       - name: debug
         run: ls -la
         shell: bash
-      - name: Run the action on ref_slice major change
-        id: action_major
+      - name: Run the action on ref_slice patch change
         uses: ./action/
         with:
-          package: ref_slice
           baseline-rev: 4d64380252c8fbda023cca58406fa40a27ad1177
 
   test-baseline-root:
